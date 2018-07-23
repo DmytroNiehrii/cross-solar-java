@@ -14,6 +14,7 @@ buildscript {
 	}
 }
 
+
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: "jacoco"
@@ -26,17 +27,32 @@ group = 'com.crossover'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
+
 repositories {
 	mavenCentral()
 }
 
 
+jacocoTestReport {
+	afterEvaluate {
+		classDirectories = files(classDirectories.files.collect {
+			fileTree(dir: it,
+					exclude: ['com/crossover/techtrial/config/**',
+							  'com/crossover/techtrial/dto/**',
+							  'com/crossover/techtrial/model/**',
+							  'com/crossover/techtrial/CrossSolarApplication**'])
+		})
+	}
+}
+
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter')
 	compile('org.springframework.boot:spring-boot-starter-data-jpa')
 	compile('org.springframework.boot:spring-boot-starter-web')
-	compile('org.springframework.boot:spring-boot-starter-data-rest')
+	compile('net.javacrumbs.shedlock:shedlock-spring:1.0.0')
+	compile('net.javacrumbs.shedlock:shedlock-provider-jdbc-template:1.0.0')
 	compile('com.fasterxml.jackson.core:jackson-core')
+	compile "org.projectlombok:lombok:1.18.0"
 	testCompile('com.h2database:h2')
 	testCompile('org.springframework.boot:spring-boot-starter-aop')
 	compile('org.liquibase:liquibase-core')
